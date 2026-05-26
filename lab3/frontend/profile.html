@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profil</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial; background: #f0f2f5; min-height: 100vh; }
+    .navbar { background: #4CAF50; padding: 16px 32px; color: white; display: flex; justify-content: space-between; align-items: center; }
+    .navbar h2 { font-size: 20px; }
+    .navbar a { color: white; text-decoration: none; }
+    .container { max-width: 500px; margin: 40px auto; padding: 0 16px; }
+    .card { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 32px; }
+    .hello { font-size: 32px; color: #4CAF50; font-weight: bold; margin-bottom: 8px; }
+    .subtitle { color: #666; margin-bottom: 24px; }
+    label { display: block; color: #555; font-size: 14px; margin-bottom: 6px; margin-top: 16px; }
+    input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; }
+    input:focus { outline: none; border-color: #4CAF50; }
+    button { width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 24px; }
+    button:hover { background: #45a049; }
+    .success { color: #4CAF50; text-align: center; margin-top: 12px; display: none; }
+    hr { border: none; border-top: 1px solid #eee; margin: 24px 0; }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <h2>Profilul Meu</h2>
+    <a href="/index.html" onclick="logout()">Logout</a>
+  </div>
+  <div class="container">
+    <div class="card">
+      <div class="hello" id="hello">Hello!</div>
+      <div class="subtitle" id="subtitle">Bine ai venit!</div>
+      <hr>
+      <label>Nume complet</label>
+      <input type="text" id="name" placeholder="Numele tau"/>
+      <label>Parola noua (optional)</label>
+      <input type="password" id="newPassword" placeholder="Lasa gol daca nu vrei sa schimbi"/>
+      <label>Confirma parola noua</label>
+      <input type="password" id="confirmPassword" placeholder="Repeta parola noua"/>
+      <button onclick="saveProfile()">Salveaza modificarile</button>
+      <p class="success" id="success">Profil actualizat cu succes!</p>
+    </div>
+  </div>
+  <script>
+    const username = localStorage.getItem('user');
+    if (!username) window.location.href = '/index.html';
+
+    async function loadProfile() {
+      const res = await fetch('http://localhost:4000/api/profile/' + username);
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('hello').textContent = 'Hello, ' + (data.user.name || username) + '!';
+        document.getElementById('subtitle').textContent = 'Username: ' + username;
+        document.getElementById('name').value = data.user.name || '';
+      }
+    }
+
+    async function saveProfile() {
+      const name = document.getElementById('name').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (newPassword && newPassword !== confirmPassword) {
+        alert('Parolele nu coincid!');
+        return;
+      }
+
+      const res = await fetch('http://localhost:4000/api/update-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, name, newPassword })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('success').style.display = 'block';
+        document.getElementById('hello').textContent = 'Hello, ' + name + '!';
+        setTimeout(() => {
+          document.getElementById('success').style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('name');
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>
