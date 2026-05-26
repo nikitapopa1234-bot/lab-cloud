@@ -3,14 +3,14 @@ options:
 
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/lab2-backend:$COMMIT_SHA', './lab2/backend']
+    args: ['build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/lab2-repo/lab2-backend:$COMMIT_SHA', './lab2/backend']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/lab2-frontend:$COMMIT_SHA', './lab2/frontend']
+    args: ['build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/lab2-repo/lab2-frontend:$COMMIT_SHA', './lab2/frontend']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/lab2-backend:$COMMIT_SHA']
+    args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/lab2-repo/lab2-backend:$COMMIT_SHA']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/lab2-frontend:$COMMIT_SHA']
+    args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/lab2-repo/lab2-frontend:$COMMIT_SHA']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['gcloud', 'run', 'deploy', 'lab2-backend', '--image=gcr.io/$PROJECT_ID/lab2-backend:$COMMIT_SHA', '--region=europe-west1', '--platform=managed', '--allow-unauthenticated']
+    args: ['gcloud', 'run', 'deploy', 'lab2-backend', '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/lab2-repo/lab2-backend:$COMMIT_SHA', '--region=europe-west1', '--platform=managed', '--allow-unauthenticated']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['gcloud', 'run', 'deploy', 'lab2-frontend', '--image=gcr.io/$PROJECT_ID/lab2-frontend:$COMMIT_SHA', '--region=europe-west1', '--platform=managed', '--allow-unauthenticated']
+    args: ['gcloud', 'run', 'deploy', 'lab2-frontend', '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/lab2-repo/lab2-frontend:$COMMIT_SHA', '--region=europe-west1', '--platform=managed', '--allow-unauthenticated']
