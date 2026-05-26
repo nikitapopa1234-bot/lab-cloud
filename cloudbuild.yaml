@@ -11,6 +11,6 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/lab2-repo/lab2-frontend:$COMMIT_SHA']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['gcloud', 'run', 'deploy', 'lab2-backend', '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/lab2-repo/lab2-backend:$COMMIT_SHA', '--region=europe-west1', '--platform=managed', '--allow-unauthenticated']
+    args: ['gcloud', 'run', 'deploy', 'lab2-backend', '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/lab2-repo/lab2-backend:$COMMIT_SHA', '--region=europe-west1', '--platform=managed', '--allow-unauthenticated', '--port=4000']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['gcloud', 'run', 'deploy', 'lab2-frontend', '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/lab2-repo/lab2-frontend:$COMMIT_SHA', '--region=europe-west1', '--platform=managed', '--allow-unauthenticated']
+    args: ['gcloud', 'run', 'deploy', 'lab2-frontend', '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/lab2-repo/lab2-frontend:$COMMIT_SHA', '--region=europe-west1', '--platform=managed', '--allow-unauthenticated', '--port=80']
